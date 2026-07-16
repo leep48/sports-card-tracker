@@ -13,6 +13,7 @@ export interface Card {
   playerName: string;
   year: string;
   brand: string;
+  cardNumber: string;
   condition: Condition;
   cost: number;
   estimatedValue: number;
