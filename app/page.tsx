@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SummaryBar from "@/components/SummaryBar";
 import CardForm from "@/components/CardForm";
+import CardControls from "@/components/CardControls";
 import CardList from "@/components/CardList";
 import { useCards } from "@/hooks/useCards";
+import { filterAndSortCards, type SortDirection, type SortField } from "@/lib/cardFilters";
 import type { Card, CardInput } from "@/lib/types";
 
 export default function Home() {
@@ -19,6 +21,20 @@ export default function Home() {
   } = useCards();
 
   const [editingCard, setEditingCard] = useState<Card | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortField, setSortField] = useState<SortField>("default");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
+  const visibleCards = useMemo(
+    () => filterAndSortCards(cards, { searchQuery, sortField, sortDirection }),
+    [cards, searchQuery, sortField, sortDirection]
+  );
+
+  function handleReset() {
+    setSearchQuery("");
+    setSortField("default");
+    setSortDirection("asc");
+  }
 
   function handleSubmit(input: CardInput) {
     if (editingCard) {
@@ -74,7 +90,23 @@ export default function Home() {
           onCancel={handleCancelEdit}
         />
 
-        <CardList cards={cards} onEdit={handleEdit} onDelete={handleDelete} />
+        <CardControls
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          sortField={sortField}
+          onSortFieldChange={setSortField}
+          sortDirection={sortDirection}
+          onSortDirectionChange={setSortDirection}
+          onReset={handleReset}
+          visibleCount={visibleCards.length}
+          totalCount={cards.length}
+        />
+
+        <CardList
+          cards={visibleCards}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </main>
     </div>
   );

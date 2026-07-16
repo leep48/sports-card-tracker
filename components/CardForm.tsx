@@ -13,6 +13,7 @@ const emptyFormState = {
   playerName: "",
   year: "",
   brand: "",
+  cardNumber: "",
   condition: CONDITIONS[0],
   cost: "",
   estimatedValue: "",
@@ -25,6 +26,7 @@ function toFormState(editingCard: Card | null) {
     playerName: editingCard.playerName,
     year: editingCard.year,
     brand: editingCard.brand,
+    cardNumber: editingCard.cardNumber ?? "",
     condition: editingCard.condition,
     cost: String(editingCard.cost),
     estimatedValue: String(editingCard.estimatedValue),
@@ -72,6 +74,7 @@ export default function CardForm({
       playerName,
       year: formState.year.trim(),
       brand: formState.brand.trim(),
+      cardNumber: formState.cardNumber.trim(),
       condition: formState.condition as Condition,
       cost: formState.cost === "" ? 0 : cost,
       estimatedValue: formState.estimatedValue === "" ? 0 : estimatedValue,
@@ -128,6 +131,19 @@ export default function CardForm({
             }
             className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
             placeholder="e.g. Topps Update"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
+          Card #
+          <input
+            type="text"
+            value={formState.cardNumber}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, cardNumber: e.target.value }))
+            }
+            className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
+            placeholder="e.g. 27"
           />
         </label>
 

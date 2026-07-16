@@ -24,6 +24,7 @@ export default function CardList({ cards, onEdit, onDelete }: CardListProps) {
             <th className="px-4 py-3 font-medium">Player</th>
             <th className="px-4 py-3 font-medium">Year</th>
             <th className="px-4 py-3 font-medium">Brand / Set</th>
+            <th className="px-4 py-3 font-medium">Card #</th>
             <th className="px-4 py-3 font-medium">Condition</th>
             <th className="px-4 py-3 font-medium">Cost</th>
             <th className="px-4 py-3 font-medium">Est. Value</th>
@@ -49,6 +50,9 @@ export default function CardList({ cards, onEdit, onDelete }: CardListProps) {
                 </td>
                 <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                   {card.brand || "—"}
+                </td>
+                <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+                  {card.cardNumber || "—"}
                 </td>
                 <td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
                   {card.condition}
