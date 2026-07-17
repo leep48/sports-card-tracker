@@ -5,6 +5,7 @@ import SummaryBar from "@/components/SummaryBar";
 import CardForm from "@/components/CardForm";
 import CardControls from "@/components/CardControls";
 import CardList from "@/components/CardList";
+import AuthStatus from "@/components/AuthStatus";
 import { useCards } from "@/hooks/useCards";
 import { filterAndSortCards, type SortDirection, type SortField } from "@/lib/cardFilters";
 import type { Card, CardInput } from "@/lib/types";
@@ -88,13 +89,16 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex w-full max-w-4xl flex-1 flex-col gap-8 px-6 py-12 sm:px-8">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
-            Sports Card Tracker
-          </h1>
-          <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-            Track your collection&apos;s cost, value, and gain or loss.
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-zinc-50">
+              Sports Card Tracker
+            </h1>
+            <p className="mt-1 text-zinc-600 dark:text-zinc-400">
+              Track your collection&apos;s cost, value, and gain or loss.
+            </p>
+          </div>
+          <AuthStatus />
         </div>
 
         <SummaryBar
