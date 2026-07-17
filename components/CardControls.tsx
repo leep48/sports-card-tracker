@@ -52,7 +52,7 @@ export default function CardControls({
           <select
             value={sortField}
             onChange={(e) => onSortFieldChange(e.target.value as SortField)}
-            className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
+            className="rounded border border-black/15 bg-white px-3 py-2 text-black dark:border-white/20 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
