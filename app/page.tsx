@@ -13,6 +13,8 @@ import type { Card, CardInput } from "@/lib/types";
 export default function Home() {
   const {
     cards,
+    status,
+    isAuthenticated,
     addCard,
     updateCard,
     deleteCard,
@@ -113,6 +115,24 @@ export default function Home() {
           onSubmit={handleSubmit}
           onCancel={handleCancelEdit}
         />
+
+        {!isAuthenticated && (
+          <p className="-mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+            Log in to save your collection.
+          </p>
+        )}
+
+        {isAuthenticated && status === "loading" && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Loading your collection…
+          </p>
+        )}
+
+        {isAuthenticated && status === "error" && (
+          <p className="text-sm text-red-600 dark:text-red-400">
+            Something went wrong loading your collection. Try refreshing the page.
+          </p>
+        )}
 
         <CardControls
           searchQuery={searchQuery}
