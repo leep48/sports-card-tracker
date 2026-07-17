@@ -15,9 +15,15 @@ npm run start   # serve the production build
 
 There is no test suite configured in this repo (no Jest/Vitest/Playwright in `package.json`). Do not assume one exists.
 
+## Environment variables
+
+`EBAY_CLIENT_ID` / `EBAY_CLIENT_SECRET` (see `.env.local.example`) — an eBay developer **production** keyset, used server-side only by `app/api/valuation/route.ts` / `lib/ebay.ts` to fetch active-listing comps for card value estimates. Never referenced from client components; `lib/ebay.ts` is guarded with `import "server-only"`.
+
 ## Architecture
 
 Single-page Next.js App Router app. Everything renders under `app/page.tsx`, which is a Client Component (`"use client"`) composing three presentational/interactive pieces from `components/`: `SummaryBar`, `CardForm`, `CardList`. `app/layout.tsx` stays a Server Component (fonts, `<html>/<body>`, metadata) and does no data work.
+
+**Card valuation** (`app/api/valuation/route.ts`, `lib/ebay.ts`, `lib/valuation.ts`): the app's only backend endpoint. Given a card, it queries the eBay Browse API (active listings — eBay's sold/completed-sale APIs are deprecated or restricted to approved partners, see comments in `lib/ebay.ts`) two ways: an `exact` search using every identifying field, and a `similar` search (only when `printRun` is set) that matches the same player and print run near the same year but drops set/card-number, so it can estimate scarce numbered cards from comparably scarce cards. `lib/valuation.ts` is pure (no I/O) — it builds both query strings and reduces raw comps to a median-based `Valuation` — so it's the place to adjust query-building or estimate logic without touching the API client. `components/CardList.tsx` triggers the fetch from a button's `onClick` handler (not an effect), so its loading/result `useState` calls don't trip the `set-state-in-effect` lint rule described below.
 
 **Data model** (`lib/types.ts`): `Card` is the single source of truth; `CardInput = Omit<Card, "id">` is derived from it for the add/edit form, so adding a field to `Card` doesn't require a second manual definition.
 

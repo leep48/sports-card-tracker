@@ -15,7 +15,9 @@ function matchesSearch(card: Card, query: string): boolean {
   return (
     card.playerName.toLowerCase().includes(q) ||
     card.brand.toLowerCase().includes(q) ||
-    (card.cardNumber ?? "").toLowerCase().includes(q)
+    (card.cardNumber ?? "").toLowerCase().includes(q) ||
+    (card.cardName ?? "").toLowerCase().includes(q) ||
+    (card.parallel ?? "").toLowerCase().includes(q)
   );
 }
 

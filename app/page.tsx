@@ -65,6 +65,26 @@ export default function Home() {
     }
   }
 
+  function handleUseValue(card: Card, value: number) {
+    const input: CardInput = {
+      playerName: card.playerName,
+      year: card.year,
+      brand: card.brand,
+      cardNumber: card.cardNumber,
+      condition: card.condition,
+      cost: card.cost,
+      estimatedValue: value,
+      cardName: card.cardName,
+      printRun: card.printRun,
+      sport: card.sport,
+      parallel: card.parallel,
+      isRookie: card.isRookie,
+      isAutograph: card.isAutograph,
+      isRelic: card.isRelic,
+    };
+    updateCard(card.id, input);
+  }
+
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex w-full max-w-4xl flex-1 flex-col gap-8 px-6 py-12 sm:px-8">
@@ -106,6 +126,7 @@ export default function Home() {
           cards={visibleCards}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onUseValue={handleUseValue}
         />
       </main>
     </div>

@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { CONDITIONS, type Card, type CardInput, type Condition } from "@/lib/types";
+import {
+  CONDITIONS,
+  SPORTS,
+  type Card,
+  type CardInput,
+  type Condition,
+  type Sport,
+} from "@/lib/types";
 
 interface CardFormProps {
   editingCard: Card | null;
@@ -17,6 +24,13 @@ const emptyFormState = {
   condition: CONDITIONS[0],
   cost: "",
   estimatedValue: "",
+  cardName: "",
+  printRun: "",
+  sport: "" as Sport | "",
+  parallel: "",
+  isRookie: false,
+  isAutograph: false,
+  isRelic: false,
 };
 
 function toFormState(editingCard: Card | null) {
@@ -30,6 +44,13 @@ function toFormState(editingCard: Card | null) {
     condition: editingCard.condition,
     cost: String(editingCard.cost),
     estimatedValue: String(editingCard.estimatedValue),
+    cardName: editingCard.cardName ?? "",
+    printRun: editingCard.printRun ? String(editingCard.printRun) : "",
+    sport: editingCard.sport ?? ("" as Sport | ""),
+    parallel: editingCard.parallel ?? "",
+    isRookie: editingCard.isRookie ?? false,
+    isAutograph: editingCard.isAutograph ?? false,
+    isRelic: editingCard.isRelic ?? false,
   };
 }
 
@@ -69,6 +90,15 @@ export default function CardForm({
       return;
     }
 
+    const printRun = Number(formState.printRun);
+    if (
+      formState.printRun !== "" &&
+      (Number.isNaN(printRun) || printRun <= 0)
+    ) {
+      setError("Print run must be a positive number.");
+      return;
+    }
+
     setError(null);
     onSubmit({
       playerName,
@@ -78,6 +108,13 @@ export default function CardForm({
       condition: formState.condition as Condition,
       cost: formState.cost === "" ? 0 : cost,
       estimatedValue: formState.estimatedValue === "" ? 0 : estimatedValue,
+      cardName: formState.cardName.trim() || undefined,
+      printRun: formState.printRun === "" ? undefined : printRun,
+      sport: formState.sport === "" ? undefined : formState.sport,
+      parallel: formState.parallel.trim() || undefined,
+      isRookie: formState.isRookie,
+      isAutograph: formState.isAutograph,
+      isRelic: formState.isRelic,
     });
 
     if (!editingCard) {
@@ -148,6 +185,68 @@ export default function CardForm({
         </label>
 
         <label className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
+          Card Name
+          <input
+            type="text"
+            value={formState.cardName}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, cardName: e.target.value }))
+            }
+            className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
+            placeholder="e.g. Roundball Remnants"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
+          Parallel / Variation
+          <input
+            type="text"
+            value={formState.parallel}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, parallel: e.target.value }))
+            }
+            className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
+            placeholder="e.g. Silver Prizm"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
+          Print Run (out of)
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={formState.printRun}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, printRun: e.target.value }))
+            }
+            className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
+            placeholder="e.g. 50 for a /50 card"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
+          Sport
+          <select
+            value={formState.sport}
+            onChange={(e) =>
+              setFormState((s) => ({
+                ...s,
+                sport: e.target.value as Sport | "",
+              }))
+            }
+            className="rounded border border-black/15 bg-white px-3 py-2 text-black dark:border-white/20 dark:bg-zinc-900 dark:text-zinc-50"
+          >
+            <option value="">Unspecified</option>
+            {SPORTS.map((sport) => (
+              <option key={sport} value={sport}>
+                {sport}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-zinc-600 dark:text-zinc-400">
           Condition
           <select
             value={formState.condition}
@@ -195,6 +294,41 @@ export default function CardForm({
             className="rounded border border-black/15 bg-transparent px-3 py-2 text-black dark:border-white/20 dark:text-zinc-50"
             placeholder="0.00"
           />
+        </label>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-4">
+        <label className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <input
+            type="checkbox"
+            checked={formState.isRookie}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, isRookie: e.target.checked }))
+            }
+          />
+          Rookie
+        </label>
+
+        <label className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <input
+            type="checkbox"
+            checked={formState.isAutograph}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, isAutograph: e.target.checked }))
+            }
+          />
+          Autograph
+        </label>
+
+        <label className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <input
+            type="checkbox"
+            checked={formState.isRelic}
+            onChange={(e) =>
+              setFormState((s) => ({ ...s, isRelic: e.target.checked }))
+            }
+          />
+          Relic
         </label>
       </div>
 
